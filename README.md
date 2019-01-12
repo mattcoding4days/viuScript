@@ -1,3 +1,3 @@
 # viuScript
 
-![Imgur Image](https://gfycat.com/BouncyConsiderateCopperhead)
+![Alt Text](https://gfycat.com/BouncyConsiderateCopperhead)

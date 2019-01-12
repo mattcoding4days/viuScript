@@ -1,0 +1,82 @@
+#!/bin/bash
+##  Title:          viuScript
+##  Author:         Matt Williams [https://github.com/mattcoding4days]
+##
+##  Description:    A simple script that tries to make the loggin and file
+##                  transfer process a little bit easier. 
+##
+##  Version:        1.0
+##===========================================================================
+
+##  Constants
+SERVER="csci.viu.ca"
+IPSERVER="142.25.101.2"
+
+##  takes input from -i and -l command
+function login {
+    if [[ $1 && $2 ]]; then
+        clear
+        echo -e "Logging into VIU server via ip..\n\n"
+        ssh -l $1 $IPSERVER 
+    else
+       clear
+       echo -e "Logging into VIU server..\n\n"
+       ssh -l $OPTARG $SERVER
+   fi 
+}
+
+##  using scp file tranfer protocol
+function fileTransfer {
+    clear
+    echo -e "Transferring your files..\n\n"
+    scp $1 $2@$SERVER:$3
+}
+
+##  Simple help menu
+function displayHelp {
+    clear
+    echo -e "Usage: viuScript [OPTION]..\n"
+    echo -e "\tviuScript is meant to mitigate the login and file transfer process,"
+    echo -e "\tAll this information can be found on Dave Wessels Technotes page."
+    echo -e "\thttp://csci.viu.ca/~wesselsd/technotes.html"
+    echo -e "\tThe same public information about VIU's server seen in this script can"
+    echo -e "\talso be seen on his page.\n\n"
+    echo -e "\t-i <yourUserName>      use ip address to login"
+    echo -e "\t-l <yourUserName>      Login using standard method"
+    echo -e "\t-h                     Display this menu"
+    echo -e "\t-t <file> <yourloginId> </path/to/where/you/want>\n"
+    echo -e "\t[e.g] viuScript -t lab2.cpp johnQpublic csci161/lab2.cpp\n\n" 
+}
+
+while getopts 'l:i:t:h' OPTION; do
+    case "$OPTION" in
+        l)
+            lvalue="$OPTARG"
+            login $OPTARG
+            ;;
+        t)
+            tvalue1="$1" # will hold -t, so we don't use
+            tvalue2="$2"
+            tvalue3="$3"
+            tvalue4="$4"
+            fileTransfer $2 $3 $4
+            ;;
+        i)
+            ivalue1="$1" # will hold -i but we use for the if statement in login
+            ivalue2="$2"
+            login $1 $2
+            ;;
+        h)
+            displayHelp
+            ;;
+        ?)
+            echo "script usage: $(basename $0) 
+            [-l <yourloginId>]
+            [-i <yourloginId>]
+            [-t <file> <yourloginId> <file>] 
+            [-h Displays a detailed help menu]" >&2
+            exit 1
+            ;;
+    esac
+done
+shift "$(($OPTIND -1))"

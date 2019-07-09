@@ -2,9 +2,8 @@
 ##  Title:          viuScript
 ##  Author:         Matt Williams [https://github.com/mattcoding4days]
 ##
-##  Description:    A simple script that tries to make the loggin and file
-##                  transfer process a little bit easier. 
-##
+##  Description:    A simple script that tries to make the file transfer
+##                  and log in process at bit faster, and easier
 ##  Version:        1.0
 ##===========================================================================
 
@@ -17,11 +16,11 @@ function login {
     clear
     if [[ $1 && $2 ]]; then
         printf "Logging into VIU server via ip..\n\n"
-        ssh -l $1 $IPSERVER 
+        ssh -l $1 $IPSERVER
     else
        printf  "Logging into VIU server..\n\n"
        ssh -l $OPTARG $SERVER
-   fi 
+   fi
 }
 
 ##  using scp file tranfer protocol
@@ -42,29 +41,28 @@ function displayHelp {
     printf  "\t-l <yourUserName>      Login using standard method\n"
     printf  "\t-h                     Display this menu\n"
     printf  "\t-t <file> <yourloginId> /path/to/where/you/want\n"
-    printf  "\t[e.g] viuScript -t lab2.cpp johnQpublic csci161/lab2.cpp\n\n" 
+    printf  "\t[e.g] viuScript -t lab2.cpp johnQpublic csci161/lab2.cpp\n\n"
 }
 
 # usage function
 function noArrgs {
-    echo "script usage: $(basename $0) 
+    echo "script usage: $(basename $0)
     [-l <yourloginId>]
     [-i <yourloginId>]
-    [-t <file> <yourloginId> <file>] 
+    [-t <file> <yourloginId> <file>]
     [-h Displays a detailed help menu]" >&2
     exit 1
-
 }
 
 # if no param's are given, execute this
 if [ -z "$1" ]
-then 
+then
     noArrgs
 fi
 
+# start main loop
 while getopts 'l:i:t:h' OPTION; do
     case "$OPTION" in
-    
         l)
             lvalue="$OPTARG"
             login $OPTARG
@@ -87,6 +85,6 @@ while getopts 'l:i:t:h' OPTION; do
         ?)
             noArrgs
             ;;
-    esac
+        esac
 done
 shift "$(($OPTIND -1))"

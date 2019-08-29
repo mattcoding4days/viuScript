@@ -60,7 +60,7 @@ then
     noArrgs
 fi
 
-# start main loop
+# start the main loop
 while getopts 'l:i:t:h' OPTION; do
     case "$OPTION" in
         l)

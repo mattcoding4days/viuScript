@@ -1,7 +1,7 @@
 #!/bin/bash
 ##  Title:          viuScript
-##  Author:         Matt Williams [https://github.com/mattcoding4days]
-##
+##  Author:         Matt Williams [https://github.com/mattcoding4days] 
+## 
 ##  Description:    A simple script that tries to make the file transfer
 ##                  and log in process at bit faster, and easier
 ##  Version:        1.0
@@ -13,10 +13,12 @@ IPSERVER="142.25.101.2"
 
 ##  takes input from -i and -l command
 function login {
+    local arg1=$1
+    local arg2=$2
     clear
-    if [[ $1 && $2 ]]; then
+    if [[ $arg1 && $arg2 ]]; then
         printf "Logging into VIU server via ip..\n\n"
-        ssh -l $1 $IPSERVER
+        ssh -l $arg1 $IPSERVER
     else
        printf  "Logging into VIU server..\n\n"
        ssh -l $OPTARG $SERVER
@@ -65,19 +67,18 @@ while getopts 'l:i:t:h' OPTION; do
     case "$OPTION" in
         l)
             lvalue="$OPTARG"
-            login $OPTARG
+            login $lvalue
             ;;
         t)
-            tvalue1="$1" # will hold -t, so we don't use
             tvalue2="$2"
             tvalue3="$3"
             tvalue4="$4"
-            fileTransfer $2 $3 $4
+            fileTransfer $tvalue2 $tvalue3 $tvalue4
             ;;
         i)
             ivalue1="$1" # will hold -i but we use for the if statement in login
             ivalue2="$2"
-            login $1 $2
+            login $ivalue1 $ivalue2
             ;;
         h)
             displayHelp

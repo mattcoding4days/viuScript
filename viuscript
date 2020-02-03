@@ -20,8 +20,8 @@ function login {
     printf "Logging into VIU server via ip..\n\n"
     ssh -l $arg1 $IPSERVER
   else
-    printf  "Logging into VIU server..\n\n"
-    ssh -l $OPTARG $SERVER
+   printf  "Logging into VIU server..\n\n"
+   ssh -l $OPTARG $SERVER
  fi
 }
 

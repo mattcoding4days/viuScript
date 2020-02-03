@@ -13,79 +13,79 @@ IPSERVER="142.25.101.2"
 
 ##  takes input from -i and -l command
 function login {
-    local arg1=$1
-    local arg2=$2
-    clear
-    if [[ $arg1 && $arg2 ]]; then
-        printf "Logging into VIU server via ip..\n\n"
-        ssh -l $arg1 $IPSERVER
-    else
-       printf  "Logging into VIU server..\n\n"
-       ssh -l $OPTARG $SERVER
-   fi
+  local arg1=$1
+  local arg2=$2
+  clear
+  if [[ $arg1 && $arg2 ]]; then
+    printf "Logging into VIU server via ip..\n\n"
+    ssh -l $arg1 $IPSERVER
+  else
+    printf  "Logging into VIU server..\n\n"
+    ssh -l $OPTARG $SERVER
+ fi
 }
 
 ##  using scp file tranfer protocol
 function fileTransfer {
-    clear
-    printf "Transferring your files..\n\n"
-    scp $1 $2@$SERVER:$3
+  clear
+  printf "Transferring your files..\n\n"
+  scp $1 $2@$SERVER:$3
 }
 
 ##  Simple help menu
 function displayHelp {
-    clear
-    printf  "Usage: viuScript [OPTION]..\n"
-    printf  "\tviuScript is meant to mitigate the login and file transfer process\n"
-    printf  "\tAll this information can be found on Dave Wessels Technotes page.\n"
-    printf  "\thttp://csci.viu.ca/~wesselsd/technotes.html\n"
-    printf  "\t-i <yourUserName>      use ip address to login\n"
-    printf  "\t-l <yourUserName>      Login using standard method\n"
-    printf  "\t-h                     Display this menu\n"
-    printf  "\t-t <file> <yourloginId> /path/to/where/you/want\n"
-    printf  "\t[e.g] viuScript -t lab2.cpp johnQpublic csci161/lab2.cpp\n\n"
+  clear
+  printf  "Usage: viuScript [OPTION]..\n"
+  printf  "\tviuScript is meant to mitigate the login and file transfer process\n"
+  printf  "\tAll this information can be found on Dave Wessels Technotes page.\n"
+  printf  "\thttp://csci.viu.ca/~wesselsd/technotes.html\n"
+  printf  "\t-i <yourUserName>      use ip address to login\n"
+  printf  "\t-l <yourUserName>      Login using standard method\n"
+  printf  "\t-h                     Display this menu\n"
+  printf  "\t-t <file> <yourloginId> /path/to/where/you/want\n"
+  printf  "\t[e.g] viuScript -t lab2.cpp johnQpublic csci161/lab2.cpp\n\n"
 }
 
 # usage function
 function noArrgs {
-    echo "script usage: $(basename $0)
-    [-l <yourloginId>]
-    [-i <yourloginId>]
-    [-t <file> <yourloginId> <file>]
-    [-h Displays a detailed help menu]" >&2
-    exit 1
+  echo "script usage: $(basename $0)
+  [-l <yourloginId>]
+  [-i <yourloginId>]
+  [-t <file> <yourloginId> <file>]
+  [-h Displays a detailed help menu]" >&2
+  exit 1
 }
 
 # if no param's are given, execute this
 if [ -z "$1" ]
 then
-    noArrgs
+  noArrgs
 fi
 
 # start the main loop
 while getopts 'l:i:t:h' OPTION; do
-    case "$OPTION" in
-        l)
-            lvalue="$OPTARG"
-            login $lvalue
-            ;;
-        t)
-            tvalue2="$2"
-            tvalue3="$3"
-            tvalue4="$4"
-            fileTransfer $tvalue2 $tvalue3 $tvalue4
-            ;;
-        i)
-            ivalue1="$1" # will hold -i but we use for the if statement in login
-            ivalue2="$2"
-            login $ivalue1 $ivalue2
-            ;;
-        h)
-            displayHelp
-            ;;
-        ?)
-            noArrgs
-            ;;
-        esac
+  case "$OPTION" in
+    l)
+      lvalue="$OPTARG"
+      login $lvalue
+      ;;
+    t)
+      tvalue2="$2"
+      tvalue3="$3"
+      tvalue4="$4"
+      fileTransfer $tvalue2 $tvalue3 $tvalue4
+      ;;
+    i)
+      ivalue1="$1" # will hold -i but we use for the if statement in login
+      ivalue2="$2"
+      login $ivalue1 $ivalue2
+      ;;
+    h)
+      displayHelp
+      ;;
+    ?)
+      noArrgs
+      ;;
+  esac
 done
 shift "$(($OPTIND -1))"

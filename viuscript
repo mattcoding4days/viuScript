@@ -18,10 +18,14 @@ function login {
   clear
   if [[ $arg1 && $arg2 ]]; then
     printf "Logging into VIU server via ip..\n\n"
-    ssh -l "$arg1 $IPSERVER"
+    ssh -l "$arg1" "$IPSERVER"
   else
-   printf  "Logging into VIU server..\n\n"
-   ssh -l "$OPTARG $SERVER"
+    printf  "Logging into VIU server..\n\n"
+    ssh -l "$arg1" "$SERVER"
+    local sshRet=$?
+    if [[ ! "$sshRet" ]]; then
+      printf "ssh failure\n"
+    fi
  fi
 }
 
@@ -30,6 +34,10 @@ function fileTransfer {
   clear
   printf "Transferring your files..\n\n"
   scp "$1" "$2@$SERVER:$3"
+  scpRet=$?
+  if [[ ! "$scpRet" ]]; then
+    printf "scp failure\n"
+  fi
 }
 
 ##  Simple help menu
@@ -66,8 +74,7 @@ fi
 while getopts 'l:i:t:h' OPTION; do
   case "$OPTION" in
     l)
-      lvalue="$OPTARG"
-      login "$lvalue"
+      login "$OPTARG"
       ;;
     t)
       tvalue2="$2"
@@ -88,4 +95,4 @@ while getopts 'l:i:t:h' OPTION; do
       ;;
   esac
 done
-shift "$(($OPTIND -1))"
+shift $(("$OPTIND" -1))

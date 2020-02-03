@@ -18,10 +18,10 @@ function login {
   clear
   if [[ $arg1 && $arg2 ]]; then
     printf "Logging into VIU server via ip..\n\n"
-    ssh -l $arg1 $IPSERVER
+    ssh -l "$arg1 $IPSERVER"
   else
    printf  "Logging into VIU server..\n\n"
-   ssh -l $OPTARG $SERVER
+   ssh -l "$OPTARG $SERVER"
  fi
 }
 
@@ -29,7 +29,7 @@ function login {
 function fileTransfer {
   clear
   printf "Transferring your files..\n\n"
-  scp $1 $2@$SERVER:$3
+  scp "$1" "$2@$SERVER:$3"
 }
 
 ##  Simple help menu
@@ -67,18 +67,18 @@ while getopts 'l:i:t:h' OPTION; do
   case "$OPTION" in
     l)
       lvalue="$OPTARG"
-      login $lvalue
+      login "$lvalue"
       ;;
     t)
       tvalue2="$2"
       tvalue3="$3"
       tvalue4="$4"
-      fileTransfer $tvalue2 $tvalue3 $tvalue4
+      fileTransfer "$tvalue2" "$tvalue3" "$tvalue4"
       ;;
     i)
       ivalue1="$1" # will hold -i but we use for the if statement in login
       ivalue2="$2"
-      login $ivalue1 $ivalue2
+      login "$ivalue1" "$ivalue2"
       ;;
     h)
       displayHelp

@@ -1,10 +1,10 @@
 #!/bin/bash
-##  Title:          viuScript
+##  Title:          viuscript
 ##  Author:         Matt Williams [https://github.com/mattcoding4days] 
 ## 
 ##  Description:    A simple script that tries to make the file transfer
 ##                  and log in process at bit faster, and easier
-##  Version:        1.0
+##  VERSION         1.5
 ##===========================================================================
 
 ##  Constants
@@ -12,9 +12,10 @@ SERVER="csci.viu.ca"
 
 ##  takes input -l command
 function login {
-  local id=$1
+  local id="$1"
   clear
-  printf  "Logging into VIU server..\n\n"
+
+  printf  "Logging "$id" into "$SERVER"..\n\n"
   ssh -l "$id" "$SERVER"
   local sshRet=$?
   if [[ ! "$sshRet" ]]; then
@@ -26,10 +27,10 @@ function login {
 function transferToServer {
   filename="$1" 
   id="$2" 
-
+  dest="$3"
   clear
-  printf "Transferring your files..\n\n"
-  scp "$filename" "$id@$SERVER:$filename"
+  printf "Transferring "$filename" to "$dest" for "$id" on "$SERVER"\n\n"
+  scp "$filename" "$id@$SERVER:$dest"
   scpRet=$?
   if [[ ! "$scpRet" ]]; then
     printf "scp failure\n"
@@ -40,10 +41,11 @@ function transferToServer {
 function transferToLocal {
   id="$1"
   filename="$2"
+  dest="$3"
 
   clear
-  printf "Transferring your files..\n\n"
-  scp "$id" "$filename@$SERVER:$filename"
+  printf "Transferring "$filename" to "$dest" on local machine\n\n"
+  scp "$id@$SERVER:$filename" "$dest"
   scpRet=$?
   if [[ ! "$scpRet" ]]; then
     printf "scp failure\n"
@@ -56,15 +58,15 @@ function displayHelp {
   printf  "Usage: viuScript [OPTION]..\n"
   printf  "\tviuScript is meant to mitigate the login and file transfer process\n"
   printf  "\tAll this information can be found on Dave Wessels Technotes page.\n"
-  printf  "\thttp://csci.viu.ca/~wesselsd/technotes.html\n"
+  printf  "\thttp://csci.viu.ca/~wesselsd/technotes.html\n\n"
   printf  "\t-t sends files from your machine to the server\n"
   printf  "\t-m sends files from the server to your machine\n"
   printf  "\t-l <yourUserName>      Login using standard method\n"
   printf  "\t-t <file> <yourloginId>\n"
-  printf  "\t-m <yourloginId> <file>\n"
-  printf  "\t-h                     Display this menu\n"
-  printf  "\t[e.g] viuScript -t lab2.cpp johnQpublic\n\n"
-  printf  "\t[e.g] viuScript -m johnQpublic lab2.cpp\n\n"
+  printf  "\t-m <yourloginId> <file> <destination>\n"
+  printf  "\t-h Display this menu\n\n"
+  printf  "\t[e.g] viuScript -t lab2.cpp johnQpublic\n"
+  printf  "\t[e.g] viuScript -m johnQpublic lab2.cpp /home/foo/blah\n\n"
 }
 
 # usage function
@@ -93,12 +95,14 @@ while getopts 'l:t:m:h' OPTION; do
     t)
       filename="$2"
       id="$3"
-      transferToServer "$filename" "$id"
+      destination="$3"
+      transferToServer "$filename" "$id" "$destination"
       ;;
     m)
       id="$2"
       filename="$3"
-      transferToLocal "$id" "$filename"
+      destination="$4"
+      transferToLocal "$id" "$filename" "$destination"
       ;;
     h)
       displayHelp

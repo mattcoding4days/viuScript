@@ -95,7 +95,7 @@ while getopts 'l:t:m:h' OPTION; do
     t)
       filename="$2"
       id="$3"
-      destination="$3"
+      destination="$2"
       transferToServer "$filename" "$id" "$destination"
       ;;
     m)
